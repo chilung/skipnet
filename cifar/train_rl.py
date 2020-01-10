@@ -342,7 +342,8 @@ def validate(args, test_loader, model):
 
         # measure accuracy and record loss
         prec1, = accuracy(output.data, target, topk=(1,))
-        top1.update(prec1[0], input_d.size(0))
+        # top1.update(prec1[0], input_d.size(0))
+        top1.update(prec1, input_d.size(0))
         skip_ratios.update(skips, input_d.size(0))
         batch_time.update(time.time() - end)
         end = time.time()
@@ -383,6 +384,7 @@ def test_model(args):
     model = torch.nn.DataParallel(model)
 
     if args.resume:
+        print(args.resume)
         if os.path.isfile(args.resume):
             logging.info('=> loading checkpoint `{}`'.format(args.resume))
             checkpoint = torch.load(args.resume)
