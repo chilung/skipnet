@@ -326,11 +326,14 @@ def validate(args, test_loader, model):
     # switch to evaluation mode
     model.eval()
     end = time.time()
-    for i, (input, target) in enumerate(test_loader):
+    for i, (input_d, target) in enumerate(test_loader):
         # target = target.cuda(async=True)
         target = target.cuda(non_blocking=True)
-        input_var = Variable(input, volatile=True).cuda()
-        target_var = Variable(target, volatile=True).cuda()
+        # input_var = Variable(input_d, volatile=True).cuda()
+        # target_var = Variable(target, volatile=True).cuda()
+        with torch.no_grad():
+            input_var = Variable(input_d).cuda()
+            target_var = Variable(target).cuda()
 
         output, masks, probs = model(input_var)
         skips = [mask.data.le(0.5).float().mean() for mask in masks]
@@ -339,8 +342,8 @@ def validate(args, test_loader, model):
 
         # measure accuracy and record loss
         prec1, = accuracy(output.data, target, topk=(1,))
-        top1.update(prec1[0], input.size(0))
-        skip_ratios.update(skips, input.size(0))
+        top1.update(prec1[0], input_d.size(0))
+        skip_ratios.update(skips, input_d.size(0))
         batch_time.update(time.time() - end)
         end = time.time()
 

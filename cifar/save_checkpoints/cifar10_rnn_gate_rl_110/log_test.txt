@@ -1,0 +1,2 @@
+01-11-20 00:16:start evaluating cifar10_rnn_gate_rl_110 with checkpoints from resnet-110-rnn-cifar10.pth.tar
+01-11-20 00:16:=> no checkpoint found at `resnet-110-rnn-cifar10.pth.tar`
