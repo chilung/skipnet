@@ -384,7 +384,6 @@ def test_model(args):
     model = torch.nn.DataParallel(model)
 
     if args.resume:
-        print(args.resume)
         if os.path.isfile(args.resume):
             logging.info('=> loading checkpoint `{}`'.format(args.resume))
             checkpoint = torch.load(args.resume)
