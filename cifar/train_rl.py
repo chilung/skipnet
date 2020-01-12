@@ -104,6 +104,7 @@ def parse_args():
 def main():
     args = parse_args()
     save_path = args.save_path = os.path.join(args.save_folder, args.arch)
+    print(save_path) # By Chilung
     os.makedirs(save_path, exist_ok=True)
 
     # config
@@ -327,15 +328,19 @@ def validate(args, test_loader, model):
     model.eval()
     end = time.time()
     for i, (input_d, target) in enumerate(test_loader):
+        # Comment by Chilung. modify target(async=False/True) to target.cuda(non_blocking=False/True)
+        # in response to async as reserved word in Python 3.7
         # target = target.cuda(async=True)
         target = target.cuda(non_blocking=True)
-        # input_var = Variable(input_d, volatile=True).cuda()
+        # Comment by Chilung. Volatile = now has no effect. Use with torch.no_grad(): instead
+        # input_var = Variable(input_d, volatile=True).cuda() 
         # target_var = Variable(target, volatile=True).cuda()
         with torch.no_grad():
             input_var = Variable(input_d).cuda()
             target_var = Variable(target).cuda()
 
         output, masks, probs = model(input_var)
+        # print(masks)
         skips = [mask.data.le(0.5).float().mean() for mask in masks]
         if skip_ratios.len != len(skips):
             skip_ratios.set_len(len(skips))
@@ -372,6 +377,7 @@ def validate(args, test_loader, model):
         # )
         skip_summaries.append(1-skip_ratios.avg[idx])
     # compute `computational percentage`
+    print(skip_summaries)
     cp = ((sum(skip_summaries) + 1) / (len(skip_summaries) + 1)) * 100
     logging.info('*** Computation Percentage: {:.3f} %'.format(cp))
 
@@ -380,6 +386,7 @@ def validate(args, test_loader, model):
 
 def test_model(args):
     # create model
+    # print(model_names) # By Chilung
     model = models.__dict__[args.arch](args.pretrained).cuda()
     model = torch.nn.DataParallel(model)
 
