@@ -1164,6 +1164,7 @@ class ResNetRecurrentGateRL(nn.Module):
 
         self.embed_dim = embed_dim
         self.hidden_dim = hidden_dim
+        # print("num of layers {}, embed dim {}, hidden dim {}".format(layers, embed_dim, hidden_dim))
 
         self._make_group(block, 16, layers[0], group_id=1, pool_size=32)
         self._make_group(block, 32, layers[1], group_id=2, pool_size=16)
@@ -1194,16 +1195,17 @@ class ResNetRecurrentGateRL(nn.Module):
     def _make_group(self, block, planes, layers, group_id=1, pool_size=16):
         """ Create the whole group"""
         for i in range(layers):
-            print("planes={}, layers={}/{}".format(planes, i, layers))
             if group_id > 1 and i == 0:
                 stride = 2
             else:
                 stride = 1
 
+            # print("group={}, planes={}, layers={}/{}, stride={}".format(group_id, planes, i, layers, stride))
             meta = self._make_layer_v2(block, planes, stride=stride,
                                        pool_size=pool_size)
 
-            print(meta)
+            # print(meta)
+            # print("group{}_ds{}, group{}_layer{}, group{}_gate{}".format(group_id, i, group_id, i, group_id, i))
             setattr(self, 'group{}_ds{}'.format(group_id, i), meta[0])
             setattr(self, 'group{}_layer{}'.format(group_id, i), meta[1])
             setattr(self, 'group{}_gate{}'.format(group_id, i), meta[2])
@@ -1253,7 +1255,7 @@ class ResNetRecurrentGateRL(nn.Module):
 
         for g in range(3):
             for i in range(0 + int(g == 0), self.num_layers[g]):
-                print("group:{}, layer:{}".format(g, i))
+                # print("group:{}, layer:{}".format(g, i))
                 if getattr(self, 'group{}_ds{}'.format(g+1, i)) is not None:
                     prev = getattr(self, 'group{}_ds{}'.format(g+1, i))(prev)
                 x = getattr(self, 'group{}_layer{}'.format(g+1, i))(x)
