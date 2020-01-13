@@ -1249,6 +1249,10 @@ class ResNetRecurrentGateRL(nn.Module):
         gate_feature = getattr(self, 'group1_gate0')(x)
 
         mask, gprob = self.control(gate_feature)
+        print("================mask================")
+        print(mask)
+        print("================gprob================")
+        print(gprob)
         gprobs.append(gprob)
         masks.append(mask.squeeze())
         prev = x
