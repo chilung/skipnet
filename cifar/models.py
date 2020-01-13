@@ -1253,7 +1253,7 @@ class ResNetRecurrentGateRL(nn.Module):
 
         for g in range(3):
             for i in range(0 + int(g == 0), self.num_layers[g]):
-                print("group{}, layer{}".format(g, i))
+                print("group:{}, layer:{}".format(g, i))
                 if getattr(self, 'group{}_ds{}'.format(g+1, i)) is not None:
                     prev = getattr(self, 'group{}_ds{}'.format(g+1, i))(prev)
                 x = getattr(self, 'group{}_layer{}'.format(g+1, i))(x)
