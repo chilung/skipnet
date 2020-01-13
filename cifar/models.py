@@ -108,7 +108,9 @@ class ResNet(nn.Module):
 # ResNet-38
 def cifar10_resnet_38(pretrained=False, **kwargs):
     # n = 6
+    print("Cifar")
     model = ResNet(BasicBlock, [6, 6, 6], **kwargs)
+    print(model)
     return model
 
 
@@ -745,6 +747,7 @@ class ResNetRecurrentGateSP(nn.Module):
 # For CIFAR-10
 def cifar10_rnn_gate_38(pretrained=False, **kwargs):
     """SkipNet-38 with Recurrent Gate"""
+    print("**************SkipNet-38 with Recurrent Gate**************")
     model = ResNetRecurrentGateSP(BasicBlock, [6, 6, 6], num_classes=10,
                                   embed_dim=10, hidden_dim=10)
     return model
@@ -1042,6 +1045,7 @@ class ResNetFeedForwardRL(nn.Module):
 # For CIFAR-10
 def cifar10_feedfoward_rl_38(pretrained=False, **kwargs):
     """SkipNet-38 + RL with FFGate-I"""
+    print("**************SkipNet-38 + RL with FFGate-I**************")
     model = ResNetFeedForwardRL(BasicBlock, [6, 6, 6],
                                 num_classes=10, gate_type='ffgate1')
     return model
@@ -1190,6 +1194,7 @@ class ResNetRecurrentGateRL(nn.Module):
     def _make_group(self, block, planes, layers, group_id=1, pool_size=16):
         """ Create the whole group"""
         for i in range(layers):
+            print("planes={}, layers={}/{}".format(planes, i, layers))
             if group_id > 1 and i == 0:
                 stride = 2
             else:
@@ -1198,6 +1203,7 @@ class ResNetRecurrentGateRL(nn.Module):
             meta = self._make_layer_v2(block, planes, stride=stride,
                                        pool_size=pool_size)
 
+            print(meta)
             setattr(self, 'group{}_ds{}'.format(group_id, i), meta[0])
             setattr(self, 'group{}_layer{}'.format(group_id, i), meta[1])
             setattr(self, 'group{}_gate{}'.format(group_id, i), meta[2])
@@ -1247,6 +1253,7 @@ class ResNetRecurrentGateRL(nn.Module):
 
         for g in range(3):
             for i in range(0 + int(g == 0), self.num_layers[g]):
+                print("group{}, layer{}".format(g, i))
                 if getattr(self, 'group{}_ds{}'.format(g+1, i)) is not None:
                     prev = getattr(self, 'group{}_ds{}'.format(g+1, i))(prev)
                 x = getattr(self, 'group{}_layer{}'.format(g+1, i))(x)
@@ -1277,6 +1284,7 @@ class ResNetRecurrentGateRL(nn.Module):
 # for CIFAR-10
 def cifar10_rnn_gate_rl_38(pretrained=False, **kwargs):
     """SkipNet-38 + RL with Recurrent Gate"""
+    print("**************SkipNet-38 + RL with Recurrent Gate**************")
     model = ResNetRecurrentGateRL(BasicBlock, [6, 6, 6], num_classes=10,
                                   embed_dim=10, hidden_dim=10)
     return model
