@@ -1249,19 +1249,22 @@ class ResNetRecurrentGateRL(nn.Module):
         gate_feature = getattr(self, 'group1_gate0')(x)
 
         mask, gprob = self.control(gate_feature)
-        print("================mask================")
-        print(mask)
-        print("================gprob================")
-        print(gprob)
+        # print("================mask================")
+        # print(mask)
+        # print("================gprob================")
+        # print(gprob)
         gprobs.append(gprob)
         masks.append(mask.squeeze())
         prev = x
 
         for g in range(3):
+            # print("{}, {}".format(0 + int(g == 0), self.num_layers[g]))
             for i in range(0 + int(g == 0), self.num_layers[g]):
+                # print("i={}".format(i))
                 # print("group:{}, layer:{}".format(g, i))
                 if getattr(self, 'group{}_ds{}'.format(g+1, i)) is not None:
                     prev = getattr(self, 'group{}_ds{}'.format(g+1, i))(prev)
+                # print(getattr(self, 'group{}_layer{}'.format(g+1, i)))
                 x = getattr(self, 'group{}_layer{}'.format(g+1, i))(x)
                 prev = x = mask.expand_as(x) * x + \
                            (1 - mask).expand_as(prev)*prev
@@ -1271,6 +1274,7 @@ class ResNetRecurrentGateRL(nn.Module):
                     mask, gprob = self.control(gate_feature)
                     gprobs.append(gprob)
                     masks.append(mask.squeeze())
+                # print(masks)
 
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
