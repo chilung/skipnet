@@ -493,6 +493,7 @@ def cifar10_feedforward_74(pretrained=False, **kwargs):
 
 def cifar10_feedforward_110(pretrained=False, **kwargs):
     """SkipNet-110 with FFGate-II"""
+    print("===========(1) SkipNet-110 with FFGate-II===========")
     model = ResNetFeedForwardSP(BasicBlock, [18, 18, 18], gate_type='ffgate2')
     return model
 
@@ -763,6 +764,7 @@ def cifar10_rnn_gate_74(pretrained=False, **kwargs):
 
 def cifar10_rnn_gate_110(pretrained=False,  **kwargs):
     """SkipNet-110 with Recurrent Gate"""
+    print("===========(2) SkipNet-110 with Recurrent Gate===========")
     model = ResNetRecurrentGateSP(BasicBlock, [18, 18, 18], num_classes=10,
                                   embed_dim=10, hidden_dim=10)
     return model
@@ -1061,6 +1063,7 @@ def cifar10_feedforward_rl_74(pretrained=False, **kwargs):
 
 def cifar10_feedforward_rl_110(pretrained=False, **kwargs):
     """SkipNet-110 + RL with FFGate-II"""
+    print("===========(3) SkipNet-110 + RL with FFGate-II===========")
     model = ResNetFeedForwardRL(BasicBlock, [18, 18, 18],
                                 num_classes=10, gate_type='ffgate2')
     return model
@@ -1310,6 +1313,7 @@ def cifar10_rnn_gate_rl_74(pretrained=False, **kwargs):
 
 def cifar10_rnn_gate_rl_110(pretrained=False, **kwargs):
     """SkipNet-110 + RL with Recurrent Gate"""
+    print("===========(4) SkipNet-110 + RL with Recurrent Gate===========")
     model = ResNetRecurrentGateRL(BasicBlock, [18, 18, 18], num_classes=10,
                                   embed_dim=10, hidden_dim=10)
     return model
