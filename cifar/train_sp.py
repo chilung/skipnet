@@ -243,9 +243,9 @@ def validate(args, test_loader, model, criterion):
     # switch to evaluation mode
     model.eval()
     end = time.time()
-    for i, (input, target) in enumerate(test_loader):
+    for i, (input_d, target) in enumerate(test_loader):
         target = target.cuda(async=True)
-        input_var = Variable(input, volatile=True).cuda()
+        input_var = Variable(input_d, volatile=True).cuda()
         target_var = Variable(target, volatile=True).cuda()
         # compute output
         output, masks, _ = model(input_var)
@@ -256,9 +256,11 @@ def validate(args, test_loader, model, criterion):
 
         # measure accuracy and record loss
         prec1, = accuracy(output.data, target, topk=(1,))
-        top1.update(prec1[0], input.size(0))
-        skip_ratios.update(skips, input.size(0))
-        losses.update(loss.data[0], input.size(0))
+        # top1.update(prec1[0], input_d.size(0))
+        top1.update(prec1, input_d.size(0))
+        skip_ratios.update(skips, input_d.size(0))
+        # losses.update(loss.data[0], input_d.size(0))
+        losses.update(loss.data, input_d.size(0))
         batch_time.update(time.time() - end)
         end = time.time()
 
