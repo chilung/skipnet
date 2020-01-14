@@ -340,8 +340,11 @@ def validate(args, test_loader, model):
             target_var = Variable(target).cuda()
 
         output, masks, probs = model(input_var)
+        # print("============ masks ============")
         # print(masks)
         skips = [mask.data.le(0.5).float().mean() for mask in masks]
+        # print("============ skips ============")
+        # print(skips)
         if skip_ratios.len != len(skips):
             skip_ratios.set_len(len(skips))
 
@@ -377,7 +380,7 @@ def validate(args, test_loader, model):
         # )
         skip_summaries.append(1-skip_ratios.avg[idx])
     # compute `computational percentage`
-    print(skip_summaries)
+    # print(skip_summaries)
     cp = ((sum(skip_summaries) + 1) / (len(skip_summaries) + 1)) * 100
     logging.info('*** Computation Percentage: {:.3f} %'.format(cp))
 
