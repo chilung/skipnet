@@ -377,7 +377,7 @@ def validate(args, test_loader, model):
         # )
         skip_summaries.append(1-skip_ratios.avg[idx])
     # compute `computational percentage`
-    print(skip_summaries)
+    # print(skip_summaries)
     cp = ((sum(skip_summaries) + 1) / (len(skip_summaries) + 1)) * 100
     logging.info('*** Computation Percentage: {:.3f} %'.format(cp))
 
